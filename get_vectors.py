@@ -3,7 +3,6 @@ import praw
 import pandas as pd
 import datetime as dt
 from nltk.tokenize import RegexpTokenizer
-from nltk.stem.porter import *
 from gensim.test.utils import common_texts
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from gensim import models
@@ -13,7 +12,7 @@ import pickle as pkl
 
 
 def get_doc_vec(subreddit, credentials, tokenizer, en_stop, model):
-    #try:
+    try:
         subreddit = credentials.subreddit(subreddit)
         top_subreddit = subreddit.top(limit=1000)
         doc_set = []
@@ -31,8 +30,8 @@ def get_doc_vec(subreddit, credentials, tokenizer, en_stop, model):
         x = model.infer_vector(text)
         output = [subreddit, x]
         pkl.dump(output, open('./subreddits/' + str(subreddit) + '.pkl', 'wb'))
-    #except:
-    #    print('Could not access'+str(subreddit))
+    except:
+        print('Could not access'+str(subreddit))
 
 
 def main():
@@ -40,6 +39,13 @@ def main():
     # Load credentials for Reddit API
     cred = pkl.load(open('./credentials.pkl', 'rb'))
 
+    """ How to formate credientials 
+    cred = praw.Reddit(client_id=[CLIENT_ID], \
+                     client_secret=[CLIENT_SECRET], \
+                     user_agent=[USER_AGENT], \
+                     username=[USERNAME], \
+                     password=[PASSWORD])
+    """
     # Load subreddit list
     df = pd.read_csv('./subreddits.txt')
 
