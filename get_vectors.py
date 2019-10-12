@@ -12,9 +12,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle as pkl
 
 
-def get_doc_vec(subreddit):
-    try:
-        subreddit = reddit.subreddit(subreddit)
+def get_doc_vec(subreddit, credentials, tokenizer, en_stop, model):
+    #try:
+        subreddit = credentials.subreddit(subreddit)
         top_subreddit = subreddit.top(limit=1000)
         doc_set = []
         for submission in top_subreddit:
@@ -27,29 +27,25 @@ def get_doc_vec(subreddit):
                 tokens = tokenizer.tokenize(raw)  # divide into list of strings
                 stopped_tokens = [i for i in tokens if not i in en_stop]
                 for i in stopped_tokens:
-                    #lemmatized_tokens = p_stemmer.stem(i)
                     text.append(i)
-        x = m.infer_vector(text)
+        x = model.infer_vector(text)
         output = [subreddit, x]
-        pkl.dump(output, open('/home/rubisco/Documents/subreddits/' + str(subreddit) + '.pkl', 'wb'))
-    except:
-        print('Could not access'+str(subreddit))
+        pkl.dump(output, open('./subreddits/' + str(subreddit) + '.pkl', 'wb'))
+    #except:
+    #    print('Could not access'+str(subreddit))
 
 
 def main():
 
     # Load credentials for Reddit API
-    reddit = pkl.load(open('./credentials.pkl', 'rb'))
+    cred = pkl.load(open('./credentials.pkl', 'rb'))
 
     # Load subreddit list
-    df = pd.read_csv('./subreddits-list.csv')
-
+    df = pd.read_csv('./subreddits.txt')
 
     # Instantiate NLP tools
-    p_stemmer = PorterStemmer()
     tokenizer = RegexpTokenizer(r'\w+')
     en_stop = get_stop_words('en')
-    texts = []
 
     # Custom added stop words that are meaningless
     en_stop.append('t')
@@ -68,8 +64,9 @@ def main():
     m = models.Doc2Vec.load(model)
 
     # Generate Doc2Vec vectors
-    for element in new_subs:
-        get_doc_vec(element)
+    for element in df['subreddit']:
+        subreddit = str(element).strip()
+        get_doc_vec(subreddit, cred, tokenizer, en_stop, m)
 
 
 ########################################################################
