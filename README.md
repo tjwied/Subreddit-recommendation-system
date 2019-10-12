@@ -2,8 +2,7 @@
 
 Input: subreddit query
 
-Output: Top 50 most similar subreddits to the query
-
+Output: List of subreddits ranked by similarity 
 
 ## How to build your own version
 
