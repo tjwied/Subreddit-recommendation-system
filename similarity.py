@@ -18,16 +18,17 @@ for file in file_list:
     arrays.append(x[1])
 
 # Method 1: Store individual results to files
-for i in range(len(arrays)):
-    tracker = []
-    for j in range(len(arrays)):
-        x = cosine_similarity([arrays[i], arrays[j]])
-        tracker.append([sub_list[j].display_name, x[1][0]])
-    tracker.sort(key=lambda x: x[1], reverse=True)
-    tracker = tracker[1:]
-    final = pd.DataFrame(tracker, columns=['subreddit', 'similarity_score'])
-    # Save sorted similarity scores for each subreddit to csv
-    final.to_csv('./' + str(sub_list[i].display_name) + '.csv')
+def similarity()
+    for i in range(len(arrays)):
+        tracker = []
+        for j in range(len(arrays)):
+            x = cosine_similarity([arrays[i], arrays[j]])
+            tracker.append([sub_list[j].display_name, x[1][0]])
+        tracker.sort(key=lambda x: x[1], reverse=True)
+        tracker = tracker[1:]
+        final = pd.DataFrame(tracker, columns=['subreddit', 'similarity_score'])
+        # Save sorted similarity scores for each subreddit to csv
+        final.to_csv('./' + str(sub_list[i].display_name) + '.csv')
 
 # Method 2: compute entire similarity matrix as one object. Memory intensive!
 

@@ -36,34 +36,42 @@ def get_doc_vec(subreddit):
         print('Could not access'+str(subreddit))
 
 
-# Load credentials for Reddit API
-reddit = pkl.load(open('./credentials.pkl', 'rb'))
+def main():
 
-# Load subreddit list
-df = pd.read_csv('./subreddits-list.csv')
+    # Load credentials for Reddit API
+    reddit = pkl.load(open('./credentials.pkl', 'rb'))
 
-
-# Instantiate NLP tools
-p_stemmer = PorterStemmer()
-tokenizer = RegexpTokenizer(r'\w+')
-en_stop = get_stop_words('en')
-texts = []
-
-# Custom added stop words that are meaningless
-en_stop.append('t')
-en_stop.append('1')
-en_stop.append('0')
-en_stop.append('co')
-en_stop.append('rt')
-en_stop.append('000')
-en_stop.append('o')
-en_stop.append('i')
-en_stop.append('s')
+    # Load subreddit list
+    df = pd.read_csv('./subreddits-list.csv')
 
 
-# Load pre-trained Doc2Vec model
-model="./doc2vec.bin"
-m = models.Doc2Vec.load(model)
+    # Instantiate NLP tools
+    p_stemmer = PorterStemmer()
+    tokenizer = RegexpTokenizer(r'\w+')
+    en_stop = get_stop_words('en')
+    texts = []
 
-for element in new_subs:
-    get_doc_vec(element)
+    # Custom added stop words that are meaningless
+    en_stop.append('t')
+    en_stop.append('1')
+    en_stop.append('0')
+    en_stop.append('co')
+    en_stop.append('rt')
+    en_stop.append('000')
+    en_stop.append('o')
+    en_stop.append('i')
+    en_stop.append('s')
+
+
+    # Load pre-trained Doc2Vec model
+    model="./doc2vec.bin"
+    m = models.Doc2Vec.load(model)
+
+    # Generate Doc2Vec vectors
+    for element in new_subs:
+        get_doc_vec(element)
+
+
+########################################################################
+if __name__ == '__main__':
+    main()
